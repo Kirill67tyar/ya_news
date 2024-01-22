@@ -1,5 +1,5 @@
-from django.urls import reverse
 import pytest
+from django.urls import reverse
 from datetime import datetime, timedelta
 
 from django.conf import settings
@@ -10,13 +10,13 @@ from news.models import News, Comment
 
 @pytest.fixture
 def author(django_user_model):
-    """фикстура создания автора заметки."""
+    """Фикстура создания автора комментария."""
     return django_user_model.objects.create(username='Кама Пуля')
 
 
 @pytest.fixture
-def author_client(client, author):  # Вызываем фикстуру автора и клиента.
-    """фикстура логина автора заметки."""
+def author_client(client, author):
+    """Фикстура логина автора комментария."""
     client.force_login(author)
     return client
 
@@ -24,7 +24,7 @@ def author_client(client, author):  # Вызываем фикстуру авто
 @pytest.fixture
 @pytest.mark.django_db
 def news():
-    """фикстура создания заметки."""
+    """Фикстура создания новости."""
     return News.objects.create(
         title='Заголовок к статье № 1',
         text='Текст к статье № 1',
@@ -33,7 +33,7 @@ def news():
 
 @pytest.fixture
 def comment(author, news):
-    """фикстура создания заметки."""
+    """Фикстура создания комментария."""
     return Comment.objects.create(
         text='Коммент к статье № 1',
         author=author,
@@ -43,12 +43,14 @@ def comment(author, news):
 
 @pytest.fixture
 def id_for_url(news):
+    """Фикстура id для страницы новости."""
     return (news.pk,)
 
 
 @pytest.fixture
 @pytest.mark.django_db
 def many_news():
+    """Фикстура создания новостей с разными датами."""
     today = datetime.today()
     return News.objects.bulk_create(News(
         title=f'Заголовок № {i}',
@@ -60,6 +62,7 @@ def many_news():
 @pytest.fixture
 @pytest.mark.django_db
 def comments_with_other_dates(news, author):
+    """Фикстура создания комментариев с разными датами."""
     now = timezone.now()
     for i in range(1, 3):
         comment = Comment.objects.create(
@@ -73,6 +76,7 @@ def comments_with_other_dates(news, author):
 
 @pytest.fixture
 def detail_url(news):
+    """Фикстура урла для одной новости."""
     return reverse(
         'news:detail',
         kwargs={'pk': news.pk, }
@@ -81,6 +85,7 @@ def detail_url(news):
 
 @pytest.fixture
 def delete_url(comment):
+    """Фикстура урла удаления комментария."""
     return reverse(
         'news:delete',
         kwargs={'pk': comment.pk, }
@@ -89,6 +94,7 @@ def delete_url(comment):
 
 @pytest.fixture
 def update_url(comment):
+    """Фикстура урла изменения комментария."""
     return reverse(
         'news:edit',
         kwargs={'pk': comment.pk, }
@@ -97,22 +103,7 @@ def update_url(comment):
 
 @pytest.fixture
 def form_data():
+    """Фикстура данных для формы."""
     return {
         'text': 'Комментарий 1'
     }
-
-
-# @pytest.fixture
-# # # Фикстура запрашивает другую фикстуру создания заметки.
-# def slug_for_args(note: Note) -> tuple[str]:
-#     return (note.slug,)
-
-
-# @pytest.fixture
-# # фикстура для формы создания заметки
-# def form_data():
-#     return {
-#         'title': 'Новый заголовок',
-#         'text': 'Новый текст',
-#         'slug': 'new-slug',
-#     }
