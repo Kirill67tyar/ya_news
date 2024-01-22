@@ -11,7 +11,7 @@ HOME_URL = reverse('news:home')
 
 @pytest.mark.django_db
 def test_news_count(client, many_news):
-    """Проверка, что количество новостей на странице - 10"""
+    """Тест на то, что количество новостей на странице - 10"""
     # action
     response = client.get(HOME_URL)
     # arrange
@@ -22,7 +22,7 @@ def test_news_count(client, many_news):
 
 @pytest.mark.django_db
 def test_news_order(client, many_news):
-    """Провека, что даты на главной странице отсортированы правильно"""
+    """Тест на то, что даты на главной странице отсортированы правильно"""
     # action
     response = client.get(HOME_URL)
     # arrange
@@ -34,7 +34,7 @@ def test_news_order(client, many_news):
 
 @pytest.mark.django_db
 def test_comment_order(client, news, detail_url, comments_with_other_dates):
-    """Проверяем, что комментарии выводятся от старых к новым"""
+    """Тест на то, что комментарии выводятся от старых к новым"""
     # action
     response = client.get(detail_url)
     # assertion
@@ -57,7 +57,7 @@ def test_authorized_client_has_form(admin_client, detail_url):
 
 @pytest.mark.django_db
 def test_anonymous_client_has_no_form(client, detail_url):
-    """тест проверки, что у анонимного пользователя нет формы."""
+    """Тест на то, что у анонимного пользователя нет формы."""
     # action
     response = client.get(detail_url)
     # assertion

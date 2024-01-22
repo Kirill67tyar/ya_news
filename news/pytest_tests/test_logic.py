@@ -5,8 +5,6 @@ from pytest_django.asserts import (
     assertFormError,
 )
 
-from django.urls import reverse
-
 from news.models import Comment
 from news.forms import BAD_WORDS, WARNING
 
@@ -22,7 +20,11 @@ def test_anonymous_user_cant_create_comment(client, detail_url, form_data):
     assert comment_count == 0
 
 
-def test_user_can_create_comment(author_client, news, author, detail_url, form_data):
+def test_user_can_create_comment(author_client,
+                                 news,
+                                 author,
+                                 detail_url,
+                                 form_data):
     """Тест: залогиненный пользователь может создавать комментарии."""
     # action
     response = author_client.post(detail_url, data=form_data)
@@ -38,7 +40,7 @@ def test_user_can_create_comment(author_client, news, author, detail_url, form_d
 
 
 def test_user_cant_use_bad_words(author_client, detail_url, form_data):
-    """Проверка на валидацию сообщения на содержание плохих слов."""
+    """Тест на валидацию сообщения на содержание плохих слов."""
     # arrange
     form_data['text'] = form_data['text'] + ' ' + BAD_WORDS[-1]
     # action
@@ -55,7 +57,7 @@ def test_user_cant_use_bad_words(author_client, detail_url, form_data):
 
 
 def test_author_can_delete_comment(author_client, detail_url, delete_url):
-    """Проверка, что автор комментария может его удалить"""
+    """Тест на то, что автор комментария может его удалить"""
     # action
     response = author_client.post(delete_url)
     # assertion
@@ -65,7 +67,10 @@ def test_author_can_delete_comment(author_client, detail_url, delete_url):
 
 
 def test_user_cant_delete_comment_of_another_user(admin_client, delete_url):
-    """Проверка, что авторизованный пользователь не может удалить чужой комментарий"""
+    """
+    Тест на то, что авторизованный пользователь
+    не может удалить чужой комментарий.
+    """
     # action
     status_code = admin_client.post(delete_url).status_code
     # assertion
@@ -74,8 +79,12 @@ def test_user_cant_delete_comment_of_another_user(admin_client, delete_url):
     assert count_comments == 1
 
 
-def test_author_can_edit_comment(author_client, comment, update_url, detail_url, form_data):
-    """Проверка, что автор комментария может его изменять"""
+def test_author_can_edit_comment(author_client,
+                                 comment,
+                                 update_url,
+                                 detail_url,
+                                 form_data):
+    """Тест на то, что автор комментария может его изменять."""
     # action
     response = author_client.post(
         update_url,
@@ -87,8 +96,14 @@ def test_author_can_edit_comment(author_client, comment, update_url, detail_url,
     assert comment.text == form_data['text']
 
 
-def test_user_cant_edit_comment_of_another_user(admin_client, comment, update_url, form_data):
-    """Проверка, что авторизованный пользователь не может изменять чужой комментарий"""
+def test_user_cant_edit_comment_of_another_user(admin_client,
+                                                comment,
+                                                update_url,
+                                                form_data):
+    """
+    Тест на то, что авторизованный пользователь
+    не может изменять чужой комментарий.
+    """
     # arrange
     comment_text = comment.text
     # action

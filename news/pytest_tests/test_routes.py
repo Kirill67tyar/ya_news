@@ -45,7 +45,10 @@ def test_availability_for_comment_edit_and_delete(view_name,
                                                   parametrized_client,
                                                   expected_status,
                                                   comment):
-    """Тест на доступность страниц редактирования/удаления комментария для его автора."""
+    """
+    Тест на доступность страниц
+    редактирования/удаления комментария для его автора.
+    """
     # arrange
     url = reverse(view_name, args=(comment.pk,))
     # action
@@ -62,7 +65,10 @@ def test_availability_for_comment_edit_and_delete(view_name,
     ),
 )
 def test_redirect_for_anonymous_client(client, comment, view_name):
-    """Тест на не доступность страниц редактирования/удаления комментария анонимного пользователя."""
+    """
+    Тест на не доступность страниц редактирования/удаления
+    комментария анонимного пользователя.
+    """
     # arrange
     login_url = reverse('users:login')
     url = reverse(view_name, args=(comment.pk,))
